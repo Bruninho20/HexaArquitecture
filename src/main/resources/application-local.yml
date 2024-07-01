@@ -11,15 +11,15 @@ spring:
   main:
     banner-mode: CONSOLE
   #POSTGRESQL 
-#  postgresql:
-#    datasource:
-#      driver-class-name: org.postgresql.Driver
-#      jdbc-url: jdbc:postgresql://localhost:54331/postgres
-#      username: postgres
-#      password: postgres
-#    show-sql: true
-#    database: postgresql
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  postgresql:
+    datasource:
+      driver-class-name: org.postgresql.Driver
+      jdbc-url: jdbc:postgresql://localhost:54331/postgres
+      username: postgres
+      password: postgres
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   #H2
   h2:
    console:
