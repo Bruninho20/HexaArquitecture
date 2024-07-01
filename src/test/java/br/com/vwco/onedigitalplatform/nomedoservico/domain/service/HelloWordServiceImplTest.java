@@ -23,11 +23,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
-import br.com.vwco.onedigitalplatform.nomedoservico.application.controller.dto.response.HelloWordResponse;
-import br.com.vwco.onedigitalplatform.nomedoservico.domain.model.HelloWord;
-import br.com.vwco.onedigitalplatform.nomedoservico.domain.port.outgoing.PersistHelloWordPort;
-import br.com.vwco.onedigitalplatform.nomedoservico.domain.port.outgoing.RetrieveHelloWordPort;
-import br.com.vwco.onedigitalplatform.nomedoservico.infrastructure.repository.HelloWordRepository;
+import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.HelloWordResponse;
+import br.com.vwco.onedigitalplatform.cliente.domain.model.HelloWord;
+import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.PersistHelloWordPort;
+import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.RetrieveHelloWordPort;
+import br.com.vwco.onedigitalplatform.cliente.domain.service.HelloWordServiceImpl;
+import br.com.vwco.onedigitalplatform.cliente.infrastructure.repository.HelloWordRepository;
 
 @SpringBootTest
 @ActiveProfiles("test")
