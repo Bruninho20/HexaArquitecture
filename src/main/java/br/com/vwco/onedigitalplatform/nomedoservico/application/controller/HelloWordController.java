@@ -31,7 +31,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/onedigital")
 public interface HelloWordController {
 	
-	@Operation(summary = "Hello Word - Digital One Platform.",  description = "Returns a Entity Hello Word", tags = { "Hello Word - GET ALL" })
+	@Operation(summary = "Hello Word - Vivo.",  description = "Returns a Entity Hello Word", tags = { "Hello Word - GET ALL" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
 			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
@@ -42,7 +42,7 @@ public interface HelloWordController {
 	@GetMapping(path = "/helloWords")
 	public ResponseEntity<List<HelloWordResponse>> getAll();
 	
-	@Operation(summary = "Hello Word - Digital One Platform", description = "Persists a new Entity Hello Word", tags = { "Hello Word - POST" })
+	@Operation(summary = "Hello Word - Vivo.", description = "Persists a new Entity Hello Word", tags = { "Hello Word - POST" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
 			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
@@ -54,7 +54,7 @@ public interface HelloWordController {
 	public ResponseEntity<HelloWordResponse> save(@Valid @RequestBody HelloWordRequest helloWordRequest);
 	
 	
-	@Operation(summary = "Hello Word - Digital One Platform", description = "Deletes a Entity Hello Word", tags = { "Hello Word - DELETE BY ID" })
+	@Operation(summary = "Hello Word - Vivo.", description = "Deletes a Entity Hello Word", tags = { "Hello Word - DELETE BY ID" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
 			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
@@ -66,7 +66,7 @@ public interface HelloWordController {
 	public ResponseEntity<String> deleteById(@Parameter(description = "Identifies Hello Word - 1 posicions", example = "1")
 											 @PathVariable(name = "id") Integer id);
 	
-	@Operation(summary = "Hello Word - Digital One Platform", description = "Updates a Entity Hello Word", tags = { "Hello Word - PUT" })
+	@Operation(summary = "Hello Word - Vivo.", description = "Updates a Entity Hello Word", tags = { "Hello Word - PUT" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
 			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
@@ -78,7 +78,7 @@ public interface HelloWordController {
 	public ResponseEntity<HelloWordResponse> update(@Valid @RequestBody HelloWordUpdateRequest helloWordUpdateRequest);
 	
 
-	@Operation(summary = "Hello Word - Digital One Platform.",  description = "Returns a Entity for id Hello Word", tags = { "Hello Word - GET BY ID" })
+	@Operation(summary = "Hello Word - Vivo.",  description = "Returns a Entity for id Hello Word", tags = { "Hello Word - GET BY ID" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
 			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
