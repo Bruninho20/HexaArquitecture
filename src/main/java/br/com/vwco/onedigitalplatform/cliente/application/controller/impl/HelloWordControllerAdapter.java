@@ -37,5 +37,10 @@ public class HelloWordControllerAdapter implements ClienteController {
 	public ResponseEntity<HelloWordResponse> getById(Integer id) {
 		return ResponseEntity.status(HttpStatus.OK).body(this.useCase.getById(id));
 	}
+	@Override
+	public ResponseEntity<List<HelloWordResponse>> getClients() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
