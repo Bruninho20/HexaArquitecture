@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.HelloWordResponse;
 
-public interface RetrieveHelloWordPort {
+public interface RetrieveProductPort {
 	
 	List<HelloWordResponse> getAll();
 	

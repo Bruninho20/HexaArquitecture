@@ -33,23 +33,6 @@ public class HelloWordControllerAdapter implements ClienteController {
 	public ResponseEntity<List<HelloWordResponse>> getAll() {
 		return ResponseEntity.status(HttpStatus.OK).body(this.useCase.getAll());
 	}
-
-	@Override
-	public ResponseEntity<HelloWordResponse> save(@Valid @RequestBody HelloWordRequest helloWordRequest) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(this.useCase.save(helloWordRequest));
-	}
-
-	@Override
-	public ResponseEntity<String> deleteById(Integer id) {
-		this.useCase.deleteById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(PARAMETERIZATION_DELETE_SUCCESS);
-	}
-	
-	@Override
-	public ResponseEntity<HelloWordResponse> update(@Valid @RequestBody HelloWordUpdateRequest helloWordUpdateRequest) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(this.useCase.update(helloWordUpdateRequest));
-	}
-
 	@Override
 	public ResponseEntity<HelloWordResponse> getById(Integer id) {
 		return ResponseEntity.status(HttpStatus.OK).body(this.useCase.getById(id));

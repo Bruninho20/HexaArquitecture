@@ -24,9 +24,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.HelloWordResponse;
-import br.com.vwco.onedigitalplatform.cliente.domain.model.HelloWord;
-import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.PersistHelloWordPort;
-import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.RetrieveHelloWordPort;
+import br.com.vwco.onedigitalplatform.cliente.domain.model.Product;
+import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.ProductPort;
+import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.RetrieveProductPort;
 import br.com.vwco.onedigitalplatform.cliente.domain.service.HelloWordServiceImpl;
 import br.com.vwco.onedigitalplatform.cliente.infrastructure.repository.HelloWordRepository;
 
@@ -42,23 +42,19 @@ public class HelloWordServiceImplTest {
 	private HelloWordServiceImpl service;
 	
 	@Mock
-	private PersistHelloWordPort persistHelloWordPort;
+	private ProductPort persistHelloWordPort;
 	
 	@Mock
-	private RetrieveHelloWordPort retrieveHelloWordPort;
+	private RetrieveProductPort retrieveHelloWordPort;
 	
 	private HelloWordResponse response;
 	
 	@Autowired
 	private HelloWordRepository repository;
 	
-	private HelloWord entity;
+	private Product entity;
 	
-	@BeforeEach
-	public void setup() {
-		response = new HelloWordResponse(1, "Teste Unitario" , new Date(), "user-test",  "S", new Date(), "user-test");
-		entity = new HelloWord(1, "Teste Unitario" , new Date(), new Date(), "user-test", "user-test", "S");
-	}
+
 	
 	@Test
 	@DisplayName("Test get all Hello Words Entits with Sucess")

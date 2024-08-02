@@ -30,55 +30,8 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/cliente")
 public interface ClienteController {
-	
-	@Operation(summary = "Cliente - Vivo.",  description = "Returns a Entity Hello Word", tags = { "Hello Word - GET ALL" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
-			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
-			@ApiResponse(responseCode = "401", description = "Invalid Authentication supplied", content = @Content),
-			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
-			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
-	@ResponseStatus(value = HttpStatus.OK)
-	@GetMapping(path = "/helloWords")
-	public ResponseEntity<List<HelloWordResponse>> getAll();
-	
-	@Operation(summary = "Cliente - Vivo.", description = "Persists a new Entity Hello Word", tags = { "Hello Word - POST" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
-			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
-			@ApiResponse(responseCode = "401", description = "Invalid Authentication supplied", content = @Content),
-			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
-			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
-	@PostMapping(value = "/helloWords")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<HelloWordResponse> save(@Valid @RequestBody HelloWordRequest helloWordRequest);
-	
-	
-	@Operation(summary = "Cliente - Vivo.", description = "Deletes a Entity Hello Word", tags = { "Hello Word - DELETE BY ID" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
-			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
-			@ApiResponse(responseCode = "401", description = "Invalid Authentication supplied", content = @Content),
-			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
-			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
-	@DeleteMapping(value = "/helloWords/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<String> deleteById(@Parameter(description = "Identifies Hello Word - 1 posicions", example = "1")
-											 @PathVariable(name = "id") Integer id);
-	
-	@Operation(summary = "Cliente - Vivo.", description = "Updates a Entity Hello Word", tags = { "Hello Word - PUT" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
-			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
-			@ApiResponse(responseCode = "401", description = "Invalid Authentication supplied", content = @Content),
-			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
-			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
-	@PutMapping(value = "/helloWords")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<HelloWordResponse> update(@Valid @RequestBody HelloWordUpdateRequest helloWordUpdateRequest);
-	
 
-	@Operation(summary = "Cliente - Vivo.",  description = "Returns a Entity for id Hello Word", tags = { "Hello Word - GET BY ID" })
+	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity Hello Word", tags = { "Products" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
 			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
@@ -86,9 +39,31 @@ public interface ClienteController {
 			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
 	@ResponseStatus(value = HttpStatus.OK)
-	@GetMapping(path = "/helloWords/{id}")
-	public ResponseEntity<HelloWordResponse> getById(@Parameter(description = "Identifies Hello Word - 1 positions", example = "1")
-	 @PathVariable(name = "id") Integer id);
-	
+	@GetMapping(path = "/products")
+	public ResponseEntity<List<HelloWordResponse>> getAll();
+
+	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity Hello Word", tags = { "Clients" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
+			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
+			@ApiResponse(responseCode = "401", description = "Invalid Authentication supplied", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
+	@ResponseStatus(value = HttpStatus.OK)
+	@GetMapping(path = "/clients")
+	public ResponseEntity<List<HelloWordResponse>> getClients();
+
+	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity for id Hello Word", tags = {
+			"Products by id" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
+			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
+			@ApiResponse(responseCode = "401", description = "Invalid Authentication supplied", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
+	@ResponseStatus(value = HttpStatus.OK)
+	@GetMapping(path = "/user/{user_id}/products")
+	public ResponseEntity<HelloWordResponse> getById(
+			@Parameter(description = "Identifies Hello Word - 1 positions", example = "1") @PathVariable(name = "id") Integer id);
 
 }

@@ -17,7 +17,7 @@ import jakarta.persistence.EntityManagerFactory;
 /**
  * Classe PostgreSQLConfiguration
  * 
- * @author <a href="icaro.figueiredo@atos.net">Icaro Caetano</a>
+ * @author Bruno Henrique Ferraz da Silva
  *
  */
 //@Configuration

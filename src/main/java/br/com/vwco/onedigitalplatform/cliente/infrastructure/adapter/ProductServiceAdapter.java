@@ -1,6 +1,7 @@
-package br.com.vwco.onedigitalplatform.cliente.domain.service;
+package br.com.vwco.onedigitalplatform.cliente.infrastructure.adapter;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,24 +9,17 @@ import org.springframework.stereotype.Service;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.HelloWordRequest;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.HelloWordUpdateRequest;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.HelloWordResponse;
-import br.com.vwco.onedigitalplatform.cliente.domain.port.incoming.HelloWordUseCase;
+import br.com.vwco.onedigitalplatform.cliente.domain.model.Product;
 import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.ProductPort;
 import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.RetrieveProductPort;
+import br.com.vwco.onedigitalplatform.cliente.infrastructure.repository.HelloWordRepository;
+import br.com.vwco.onedigitalplatform.cliente.mappers.ProductMapper;
 
 @Service
-public class HelloWordServiceImpl implements HelloWordUseCase {
+public class ProductServiceAdapter implements ProductPort, RetrieveProductPort {
 
 	@Autowired
-	private ProductPort persistHelloWordPort;
-
-	@Autowired
-	private RetrieveProductPort retrieveHelloWordPort;
-
-	@Override
-	public HelloWordResponse save(HelloWordRequest request) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	private HelloWordRepository repository;
 
 	@Override
 	public List<HelloWordResponse> getAll() {
@@ -34,21 +28,12 @@ public class HelloWordServiceImpl implements HelloWordUseCase {
 	}
 
 	@Override
-	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public HelloWordResponse update(HelloWordUpdateRequest request) {
+	public HelloWordResponse findById(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public HelloWordResponse getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
+
 
 }
