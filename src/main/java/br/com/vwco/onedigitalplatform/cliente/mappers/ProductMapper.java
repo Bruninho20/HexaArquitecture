@@ -1,14 +1,5 @@
 package br.com.vwco.onedigitalplatform.cliente.mappers;
 
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.HelloWordRequest;
-import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.HelloWordUpdateRequest;
-import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.HelloWordResponse;
-import br.com.vwco.onedigitalplatform.cliente.domain.model.Product;
-
 public class ProductMapper {
 	
 //	private HelloWordMapper() {

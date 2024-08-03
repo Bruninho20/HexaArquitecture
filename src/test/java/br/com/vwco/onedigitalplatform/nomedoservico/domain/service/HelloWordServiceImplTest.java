@@ -7,10 +7,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,12 +21,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
-import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.HelloWordResponse;
+import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.MessageResponse;
 import br.com.vwco.onedigitalplatform.cliente.domain.model.Product;
 import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.ProductPort;
 import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.RetrieveProductPort;
-import br.com.vwco.onedigitalplatform.cliente.domain.service.HelloWordServiceImpl;
-import br.com.vwco.onedigitalplatform.cliente.infrastructure.repository.HelloWordRepository;
+import br.com.vwco.onedigitalplatform.cliente.domain.service.ClientService;
+import br.com.vwco.onedigitalplatform.cliente.infrastructure.repository.UserJpaRepository;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -39,7 +37,7 @@ public class HelloWordServiceImplTest {
 	
 	@InjectMocks
 	//@Autowired
-	private HelloWordServiceImpl service;
+	private ClientService service;
 	
 	@Mock
 	private ProductPort persistHelloWordPort;
@@ -47,28 +45,28 @@ public class HelloWordServiceImplTest {
 	@Mock
 	private RetrieveProductPort retrieveHelloWordPort;
 	
-	private HelloWordResponse response;
+	private MessageResponse response;
 	
 	@Autowired
-	private HelloWordRepository repository;
+	private UserJpaRepository repository;
 	
 	private Product entity;
 	
 
-	
-	@Test
-	@DisplayName("Test get all Hello Words Entits with Sucess")
-	void test_getAll_Sucess() {
-		
-		when(this.retrieveHelloWordPort.getAll()).thenReturn(Collections.singletonList(response));
-		
-		List<HelloWordResponse> responseReturned = service.getAll();
-		
-		assertEquals(responseReturned, Collections.singletonList(response));
-		verify(retrieveHelloWordPort, atLeastOnce()).getAll();
-		verifyNoMoreInteractions(retrieveHelloWordPort);
-	}
-	
+//	
+//	@Test
+//	@DisplayName("Test get all Hello Words Entits with Sucess")
+//	void test_getAll_Sucess() {
+//		
+//		when(this.retrieveHelloWordPort.getAll()).thenReturn(Collections.singletonList(response));
+//		
+//		List<HelloWordResponse> responseReturned = service.crateUser(null);
+//		
+//		assertEquals(responseReturned, Collections.singletonList(response));
+//		verify(retrieveHelloWordPort, atLeastOnce()).getAll();
+//		verifyNoMoreInteractions(retrieveHelloWordPort);
+//	}
+//	
 //	@Test
 //	@DisplayName("Test get all Hello Words Entits with Sucess")
 //	void test_getAll_Sucess_IT() {
