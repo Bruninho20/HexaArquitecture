@@ -30,7 +30,7 @@ public class WebSecurityConfig {
     private static final String[] AUTH_WHITELIST = {
         "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
         "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
-        "/swagger/**", "/access/api/auth/**", "/access/api/refresh/**", "/api/cliente/user",
+        "/swagger/**", "/access/api/auth/**", "/access/api/refresh/**", "/api/cliente/user","/api/cliente/clients",
         "/access/api/auth/signin/**", "/swagger-ui/index.html", "/access/api/device/**"
     };
 

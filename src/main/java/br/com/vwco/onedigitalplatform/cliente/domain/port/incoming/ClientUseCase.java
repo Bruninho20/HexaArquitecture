@@ -7,5 +7,7 @@ import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request
 public interface ClientUseCase {
 
 	ResponseEntity<Object> crateUser(RegisterUserRequest registerUserRequest);
+	
+	ResponseEntity<Object> getAll();
 
 }

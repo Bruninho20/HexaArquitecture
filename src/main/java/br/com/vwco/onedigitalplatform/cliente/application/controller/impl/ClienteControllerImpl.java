@@ -39,15 +39,15 @@ public class ClienteControllerImpl implements ClienteController {
 	@Override
 	@GetMapping("/products")
 	public ResponseEntity<List<Object>> getAll() {
-		// TODO Auto-generated method stub
+		LOGGER.info("GET ALL PRODUCTS");
 		return null;
 	}
 
 	@Override
 	@GetMapping("/clients")
-	public ResponseEntity<List<Object>> getClients() {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<Object> getClients() {
+		LOGGER.info("GET ALL CLIENTS");
+		return clientWordUseCase.getAll();
 	}
 
 	@Override

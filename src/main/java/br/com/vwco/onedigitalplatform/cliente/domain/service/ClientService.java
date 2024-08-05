@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.RegisterUserRequest;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.MessageResponse;
+import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.UserDto;
 import br.com.vwco.onedigitalplatform.cliente.common.config.TimeStampUtils;
 import br.com.vwco.onedigitalplatform.cliente.common.constants.LogMessage;
 import br.com.vwco.onedigitalplatform.cliente.common.constants.MessageReturn;
+import br.com.vwco.onedigitalplatform.cliente.domain.mapper.UserMapper;
 import br.com.vwco.onedigitalplatform.cliente.domain.model.User;
 import br.com.vwco.onedigitalplatform.cliente.domain.port.incoming.ClientUseCase;
 import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.ClientPort;
@@ -40,6 +42,8 @@ public class ClientService implements ClientUseCase, ClientPort {
 
     @Autowired
     private UserJpaRepository userJpaRepository;
+    
+	private final UserMapper userMapper = new UserMapper();
 
     @Override
     public ResponseEntity<Object> crateUser(RegisterUserRequest registerUserRequest) {
@@ -83,4 +87,19 @@ public class ClientService implements ClientUseCase, ClientPort {
     public String getMessage(String code) {
         return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
     }
+
+	@Override
+	public ResponseEntity<Object> getAll() {
+		List<User> users = userJpaRepository.findAll();
+
+		if (!users.isEmpty()) {
+			List<UserDto> userDtos = userMapper.toDtoList(users);
+			logger.info(LogMessage.USER_GET_ALL, users.size());
+			return ResponseEntity.status(HttpStatus.OK).body(userDtos);
+		} else {
+			logger.warn(LogMessage.USER_ANY_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new MessageResponse(getMessage(MessageReturn.USER_ANY_FOUND)));
+		}
+	}
 }

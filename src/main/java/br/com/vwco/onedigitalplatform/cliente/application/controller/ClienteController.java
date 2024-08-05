@@ -45,7 +45,7 @@ public interface ClienteController {
 			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(path = "/clients")
-	public ResponseEntity<List<Object>> getClients();
+	public ResponseEntity<Object> getClients();
 
 	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity for id", tags = { "Products by id" })
 	@ApiResponses(value = {
