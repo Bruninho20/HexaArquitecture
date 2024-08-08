@@ -1,16 +1,10 @@
 package br.com.vwco.onedigitalplatform.cliente.domain.model;
 
-import java.util.UUID;
-
-import br.com.vwco.onedigitalplatform.cliente.common.constants.SubscriptionTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,7 +16,7 @@ public class SubscriptionType {
 	@Column(name = "subscription_type_id", updatable = false, nullable = false)
 	private Integer id;
 
-	@Column(length = 20, nullable = false)
+	@Column(length = 20, nullable = false, name = "subscription_type")
 	private String subscriptionType;
 
 	public SubscriptionType(Integer id, String subscriptionType) {

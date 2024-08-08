@@ -57,13 +57,17 @@ public class User {
 	@Column(name = "last_uptated_date")
 	private LocalDateTime lastUpdatedDate;
 
+	@Column(name = "is_activated")
+	private Boolean isActivated;
+
 	public User() {
 		super();
 	}
 
 	public User(UUID id, @NotBlank String firstName, @NotBlank String surName,
 			@NotBlank @Size(max = 50) @Email String email, @NotBlank String cpf, @NotBlank String telephone,
-			@Size(max = 120) String password, LocalDateTime createDate, LocalDateTime lastUpdatedDate) {
+			@Size(max = 120) String password, LocalDateTime createDate, LocalDateTime lastUpdatedDate,
+			Boolean isActivated) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -74,6 +78,7 @@ public class User {
 		this.password = password;
 		this.createDate = createDate;
 		this.lastUpdatedDate = lastUpdatedDate;
+		this.isActivated = isActivated;
 	}
 
 	public UUID getId() {
@@ -146,6 +151,14 @@ public class User {
 
 	public void setLastUpdatedDate(LocalDateTime lastUpdatedDate) {
 		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
+	public Boolean getIsActivated() {
+		return isActivated;
+	}
+
+	public void setIsActivated(Boolean isActivated) {
+		this.isActivated = isActivated;
 	}
 
 }

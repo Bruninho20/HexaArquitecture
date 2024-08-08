@@ -6,17 +6,19 @@ import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 /**
@@ -26,45 +28,39 @@ import jakarta.persistence.Table;
 @Table(name = "product")
 public class Product {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
+	@Column(name = "product_id", nullable = false)
+	private UUID id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "product_id", nullable = false)
-    private UUID id;
+	private String status;
 
-    private String status;
+	@Column(name = "product_name")
+	private String productName;
 
-    @Column(name = "product_name")
-    private String productName;
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "product_type_id", referencedColumnName = "product_type_id")
+	private ProductType productType;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "product_product_type",
-        joinColumns = @JoinColumn(name = "product_id"),
-        inverseJoinColumns = @JoinColumn(name = "product_type_id")
-    )
-    private Set<ProductType> productType = new HashSet<>();
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "product_id", referencedColumnName = "product_id")
+	private List<Descriptions> descriptions;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "product_descriptions",
-        joinColumns = @JoinColumn(name = "product_id"),
-        inverseJoinColumns = @JoinColumn(name = "description_id")
-    )
-    private List<Descriptions> descriptions;
+	@ElementCollection
+	@CollectionTable(name = "product_tags", joinColumns = @JoinColumn(name = "product_id"))
+	@Column(name = "tag")
+	private List<String> tags;
 
-    private List<String> tags;
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
+	private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User user;
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "price_id", referencedColumnName = "price_id")
+	private Price price;
 
-	public Product() {
-		super();
-	}
-
-	public Product(UUID id, String status, String productName, Set<ProductType> productType,
-			List<Descriptions> descriptions, List<String> tags, User user) {
+	public Product(UUID id, String status, String productName, ProductType productType, List<Descriptions> descriptions,
+			List<String> tags, User user, Price price) {
 		super();
 		this.id = id;
 		this.status = status;
@@ -73,6 +69,11 @@ public class Product {
 		this.descriptions = descriptions;
 		this.tags = tags;
 		this.user = user;
+		this.price = price;
+	}
+
+	public Product() {
+		super();
 	}
 
 	public UUID getId() {
@@ -99,11 +100,11 @@ public class Product {
 		this.productName = productName;
 	}
 
-	public Set<ProductType> getProductType() {
+	public ProductType getProductType() {
 		return productType;
 	}
 
-	public void setProductType(Set<ProductType> productType) {
+	public void setProductType(ProductType productType) {
 		this.productType = productType;
 	}
 
@@ -129,6 +130,14 @@ public class Product {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Price getPrice() {
+		return price;
+	}
+
+	public void setPrice(Price price) {
+		this.price = price;
 	}
 
 }

@@ -57,7 +57,7 @@ public interface ClienteController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(path = "/user/{user_id}")
 	public ResponseEntity<Object> getById(
-			@Parameter(description = "Identifies Hello Word - 1 positions", example = "1") @PathVariable(name = "id") Integer id);
+			@Parameter(description = "", example = "1") @PathVariable(name = "id") Integer id);
 
 	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity User", tags = { "Client" })
 	@ApiResponses(value = {
