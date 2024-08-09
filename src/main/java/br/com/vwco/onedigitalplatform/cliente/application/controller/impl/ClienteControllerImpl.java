@@ -53,7 +53,15 @@ public class ClienteControllerImpl implements ClienteController {
 	@Override
 	@GetMapping("/user/{id}")
 	public ResponseEntity<Object> getById(@PathVariable("id") Integer id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	@GetMapping("/activate/{token}")
+	public ResponseEntity<Object> activateAccount(@Valid String token) {
+		LOGGER.info("ACTIVATE TOKEN");
+		return clientWordUseCase.activateAccount(token);
+	}
+
+	
 }

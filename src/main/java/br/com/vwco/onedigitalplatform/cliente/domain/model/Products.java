@@ -25,7 +25,7 @@ public class Products {
 	@Column(name = "products_id", nullable = false)
 	private UUID id;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Product> products;
 
 	private String status;

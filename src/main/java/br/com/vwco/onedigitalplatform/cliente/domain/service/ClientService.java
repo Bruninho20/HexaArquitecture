@@ -25,68 +25,70 @@ import br.com.vwco.onedigitalplatform.cliente.domain.port.incoming.ClientUseCase
 import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.ClientPort;
 import br.com.vwco.onedigitalplatform.cliente.infrastructure.repository.UserJpaRepository;
 import br.com.vwco.onedigitalplatform.cliente.infrastructure.security.jwt.JwtUtils;
+import jakarta.validation.Valid;
 
 @Service
 public class ClientService implements ClientUseCase, ClientPort {
 
-    private final Logger logger = LoggerFactory.getLogger(ClientService.class);
+	private final Logger logger = LoggerFactory.getLogger(ClientService.class);
 
-    @Autowired
-    private PasswordEncoder encoder;
-    
-    @Autowired
-    private JwtUtils jwtUtils;
+	@Autowired
+	private PasswordEncoder encoder;
 
-    @Autowired
-    private MessageSource messageSource;
+	@Autowired
+	private JwtUtils jwtUtils;
 
-    @Autowired
-    private UserJpaRepository userJpaRepository;
-    
+	@Autowired
+	private MessageSource messageSource;
+
+	@Autowired
+	private UserJpaRepository userJpaRepository;
+
 	private final UserMapper userMapper = new UserMapper();
 
-    @Override
-    public ResponseEntity<Object> crateUser(RegisterUserRequest registerUserRequest) {
-    	logger.info("Service");
-        User userModel = userJpaRepository.findUserByEmailIgnoreCase(registerUserRequest.getEmail());
+	@Override
+	public ResponseEntity<Object> crateUser(RegisterUserRequest registerUserRequest) {
+		logger.info("Service");
+		User userModel = userJpaRepository.findUserByEmailIgnoreCase(registerUserRequest.getEmail());
 
-        if (userModel != null) {
-            logger.warn(LogMessage.EMAIL_ALREADY_TAKEN, registerUserRequest.getEmail());
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new MessageResponse(getMessage(MessageReturn.EMAIL_ALREADY_TAKEN)));
-        }
+		if (userModel != null) {
+			logger.warn(LogMessage.EMAIL_ALREADY_TAKEN, registerUserRequest.getEmail());
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+					.body("Email ja cadastrado !");
+		}
 
-        List<User> userModels = userJpaRepository.findUserByCpf(registerUserRequest.getCpf());
+		List<User> userModels = userJpaRepository.findUserByCpf(registerUserRequest.getCpf());
 
-        if (!userModels.isEmpty()) {
-            logger.warn("Cpf ja existe", registerUserRequest.getCpf());
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new MessageResponse(getMessage(MessageReturn.CPF_ALREADY_TAKEN)));
-        }
+		if (!userModels.isEmpty()) {
+			logger.warn("Cpf ja existe", registerUserRequest.getCpf());
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+					.body("CPF ja cadastrado !");
+		}
 
-        User user = new User();
+		User user = new User();
 
-        user.setCreateDate(TimeStampUtils.getBrasilitaTimestamp().toLocalDateTime());
-        user.setEmail(registerUserRequest.getEmail());
-        user.setFirstName(registerUserRequest.getFirstName());
-        user.setPassword(encoder.encode(registerUserRequest.getPassword())); 
-        user.setSurName(registerUserRequest.getSurName());
-        user.setTelephone(registerUserRequest.getTelephone());
-        user.setCpf(registerUserRequest.getCpf());
-        user.setLastUpdatedDate(TimeStampUtils.getBrasilitaTimestamp().toLocalDateTime());
-        user.setId(UUID.randomUUID());
+		user.setCreateDate(TimeStampUtils.getBrasilitaTimestamp().toLocalDateTime());
+		user.setEmail(registerUserRequest.getEmail());
+		user.setFirstName(registerUserRequest.getFirstName());
+		user.setPassword(encoder.encode(registerUserRequest.getPassword()));
+		user.setSurName(registerUserRequest.getSurName());
+		user.setTelephone(registerUserRequest.getTelephone());
+		user.setCpf(registerUserRequest.getCpf());
+		user.setLastUpdatedDate(TimeStampUtils.getBrasilitaTimestamp().toLocalDateTime());
+		user.setId(UUID.randomUUID());
+		user.setIsActivated(false);
 
-        user = userJpaRepository.save(user);
+		user = userJpaRepository.save(user);
 
-        String token = jwtUtils.generateRefreshTokenJwt(registerUserRequest.getEmail());
+		String token = jwtUtils.generateRefreshTokenJwt(registerUserRequest.getEmail());
 
-        logger.info("Usuário registrado com sucesso !", registerUserRequest.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).body(token);
-    }
+		logger.info("Usuário registrado com sucesso !", registerUserRequest.getEmail());
+		return ResponseEntity.status(HttpStatus.OK).body(token);
+	}
 
-    public String getMessage(String code) {
-        return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
-    }
+	public String getMessage(String code) {
+		return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
+	}
 
 	@Override
 	public ResponseEntity<Object> getAll() {
@@ -100,6 +102,39 @@ public class ClientService implements ClientUseCase, ClientPort {
 			logger.warn(LogMessage.USER_ANY_FOUND);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new MessageResponse(getMessage(MessageReturn.USER_ANY_FOUND)));
+		}
+	}
+
+	@Override
+	public ResponseEntity<Object> activateAccount(@Valid String token) {
+		Boolean isValid = jwtUtils.validateJwtToken(token);
+
+		if (Boolean.FALSE.equals(isValid)) {
+			logger.warn(LogMessage.TOKEN_INVALID, token);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new MessageResponse(getMessage(MessageReturn.INVALID_TOKEN)));
+		}
+
+		if (Boolean.TRUE.equals(jwtUtils.isAccessToken(token))) {
+			logger.warn(LogMessage.TOKEN_INVALID, token);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new MessageResponse(getMessage(MessageReturn.INVALID_TOKEN)));
+		}
+
+		String userEmail = jwtUtils.getUserNameFromJwtToken(token);
+
+		User userModel = userJpaRepository.findUserByEmailIgnoreCase(userEmail);
+
+		if (userModel != null && !userModel.getIsActivated()) {
+			userModel.setIsActivated(true);
+			userJpaRepository.save(userModel);
+			logger.info(LogMessage.USER_ACTIVATE_SUCCESS, userEmail);
+			return ResponseEntity.status(HttpStatus.OK)
+					.body("Usuário ativado com sucesso {} ");
+		} else {
+			logger.warn(LogMessage.USER_ALREADY_ACTIVATED, userEmail);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body("Usuário ja ativado !!");
 		}
 	}
 }

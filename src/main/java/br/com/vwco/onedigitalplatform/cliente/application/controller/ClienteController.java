@@ -70,4 +70,12 @@ public interface ClienteController {
 	@PostMapping(path = "/user")
 	public ResponseEntity<Object> crateUser(@Valid @RequestBody RegisterUserRequest registerUserRequest);
 
+	@Operation(summary = "Activate Account", description = "Activates a user account using the activation token", tags = {
+			"user" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
+			@ApiResponse(responseCode = "400", description = "Invalid activation token supplied", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
+	ResponseEntity<Object> activateAccount(@Valid @PathVariable String token);
+
 }
