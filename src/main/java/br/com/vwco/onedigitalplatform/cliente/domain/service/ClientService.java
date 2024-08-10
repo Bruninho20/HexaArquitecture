@@ -1,6 +1,7 @@
 package br.com.vwco.onedigitalplatform.cliente.domain.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -21,8 +22,10 @@ import br.com.vwco.onedigitalplatform.cliente.common.constants.LogMessage;
 import br.com.vwco.onedigitalplatform.cliente.common.constants.MessageReturn;
 import br.com.vwco.onedigitalplatform.cliente.domain.mapper.UserMapper;
 import br.com.vwco.onedigitalplatform.cliente.domain.model.User;
+import br.com.vwco.onedigitalplatform.cliente.domain.model.UserRole;
 import br.com.vwco.onedigitalplatform.cliente.domain.port.incoming.ClientUseCase;
 import br.com.vwco.onedigitalplatform.cliente.domain.port.outgoing.ClientPort;
+import br.com.vwco.onedigitalplatform.cliente.infrastructure.repository.RoleRepository;
 import br.com.vwco.onedigitalplatform.cliente.infrastructure.repository.UserJpaRepository;
 import br.com.vwco.onedigitalplatform.cliente.infrastructure.security.jwt.JwtUtils;
 import jakarta.validation.Valid;
@@ -43,6 +46,9 @@ public class ClientService implements ClientUseCase, ClientPort {
 
 	@Autowired
 	private UserJpaRepository userJpaRepository;
+	
+	@Autowired
+	private RoleRepository roleRepository;
 
 	private final UserMapper userMapper = new UserMapper();
 
@@ -127,6 +133,8 @@ public class ClientService implements ClientUseCase, ClientPort {
 
 		if (userModel != null && !userModel.getIsActivated()) {
 			userModel.setIsActivated(true);
+			UserRole userRole = roleRepository.findByRoleName("USER");
+			userModel.addRole(userRole);;
 			userJpaRepository.save(userModel);
 			logger.info(LogMessage.USER_ACTIVATE_SUCCESS, userEmail);
 			return ResponseEntity.status(HttpStatus.OK)

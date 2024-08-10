@@ -42,7 +42,7 @@ public class WebSecurityConfig {
             )
             .userDetailsService(userDetailsService)
             .formLogin(form -> form
-                .loginPage("/access/api/auth/signin/")
+                .loginPage("/access/api/auth/signin/**")
                 .permitAll()
             )
             .logout(logout -> logout
@@ -53,12 +53,12 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    private static final String[] AUTH_WHITELIST = {
-        "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
-        "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
-        "/swagger/**", "/access/api/auth/**", "/access/api/refresh/**", "/api/cliente/user","/api/cliente/clients",
-        "/access/api/auth/signin/**", "/swagger-ui/index.html", "/access/api/device/**","/api/cliente/activate/**"
-    };
+    private static final String[] AUTH_WHITELIST = { "/access/api/auth/**", "/access/api/auth/signin/**",
+			"/access/api/device/**", "/access/api/refresh/**", "/api/cliente/activate/**", "/api/cliente/clients",
+			"/api/cliente/user", "/configuration/security", "/configuration/ui", "/swagger-resources",
+			"/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-ui/index.html", "/swagger/**",
+			"/v2/api-docs", "/v3/api-docs/**", "/webjars/**"
+	};
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
