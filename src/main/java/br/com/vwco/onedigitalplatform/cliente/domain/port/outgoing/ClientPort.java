@@ -6,6 +6,6 @@ import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request
 
 public interface ClientPort {
 	
-	ResponseEntity<Object> crateUser(RegisterUserRequest registerUserRequest);
+	ResponseEntity<Object> createUser(RegisterUserRequest registerUserRequest);
 
 }

@@ -17,7 +17,11 @@ import br.com.vwco.onedigitalplatform.cliente.infrastructure.security.jwt.AuthEn
 import br.com.vwco.onedigitalplatform.cliente.infrastructure.security.jwt.AuthTokenFilter;
 import br.com.vwco.onedigitalplatform.cliente.infrastructure.service.UserDetailsServiceImpl;
 
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
+
 @Configuration
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
@@ -26,6 +30,28 @@ public class WebSecurityConfig {
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
+    
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(AUTH_WHITELIST).permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/cliente/**").hasRole("USER")
+                .anyRequest().authenticated()
+            )
+            .userDetailsService(userDetailsService)
+            .formLogin(form -> form
+                .loginPage("/access/api/auth/signin/")
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .permitAll()
+            )
+            .csrf(csrf -> csrf.disable());
+
+        return http.build();
+    }
 
     private static final String[] AUTH_WHITELIST = {
         "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",

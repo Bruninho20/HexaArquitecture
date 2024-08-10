@@ -47,7 +47,7 @@ public class ClientService implements ClientUseCase, ClientPort {
 	private final UserMapper userMapper = new UserMapper();
 
 	@Override
-	public ResponseEntity<Object> crateUser(RegisterUserRequest registerUserRequest) {
+	public ResponseEntity<Object> createUser(RegisterUserRequest registerUserRequest) {
 		logger.info("Service");
 		User userModel = userJpaRepository.findUserByEmailIgnoreCase(registerUserRequest.getEmail());
 

@@ -33,7 +33,7 @@ public class ClienteControllerImpl implements ClienteController {
 	@PostMapping("/user")
 	public ResponseEntity<Object> crateUser(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
 		LOGGER.info("Chamou a implementação");
-		return clientWordUseCase.crateUser(registerUserRequest);
+		return clientWordUseCase.createUser(registerUserRequest);
 	}
 
 	@Override

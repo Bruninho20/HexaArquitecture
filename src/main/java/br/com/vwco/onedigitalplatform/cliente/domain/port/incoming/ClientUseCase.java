@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 
 public interface ClientUseCase {
 
-	ResponseEntity<Object> crateUser(RegisterUserRequest registerUserRequest);
+	ResponseEntity<Object> createUser(RegisterUserRequest registerUserRequest);
 	
 	ResponseEntity<Object> getAll();
 	
