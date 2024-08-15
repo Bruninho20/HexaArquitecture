@@ -7,16 +7,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "product_type")
+
 public class ProductType {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "product_type_id")
+
 	private Integer id;
 
-	@Column(name = "description")
+
 	private String productType;
 
 	public ProductType() {

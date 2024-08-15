@@ -21,7 +21,6 @@ public class UserMapper {
 		userDto.setEmail(user.getEmail());
 		userDto.setCpf(user.getCpf());
 		userDto.setTelephone(user.getTelephone());
-		userDto.setId(user.getId());
 		return userDto;
 	}
 

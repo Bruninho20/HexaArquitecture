@@ -16,17 +16,17 @@ public class SubscriptionType {
 	@Column(name = "subscription_type_id", updatable = false, nullable = false)
 	private Integer id;
 
-	@Column(length = 20, nullable = false, name = "subscription_type")
-	private String subscriptionType;
-
-	public SubscriptionType(Integer id, String subscriptionType) {
-		super();
-		this.id = id;
-		this.subscriptionType = subscriptionType;
-	}
+	@Column(length = 20, nullable = false, name = "description")
+	private String description;
 
 	public SubscriptionType() {
 		super();
+	}
+
+	public SubscriptionType(Integer id, String description) {
+		super();
+		this.id = id;
+		this.description = description;
 	}
 
 	public Integer getId() {
@@ -37,12 +37,12 @@ public class SubscriptionType {
 		this.id = id;
 	}
 
-	public String getSubscriptionType() {
-		return subscriptionType;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setSubscriptionType(String subscriptionType) {
-		this.subscriptionType = subscriptionType;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

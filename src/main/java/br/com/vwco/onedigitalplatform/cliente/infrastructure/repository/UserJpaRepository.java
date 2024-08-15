@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import br.com.vwco.onedigitalplatform.cliente.domain.model.User;
 
 @Repository
-public interface UserJpaRepository extends JpaRepository<User, Integer> {
+public interface UserJpaRepository extends JpaRepository<User, Long> {
 
 	@Query(nativeQuery = true, value = "SELECT * FROM users_data WHERE LOWER(email) = LOWER(:email)")
 	User findUserByEmailIgnoreCase(@Param("email") String email);

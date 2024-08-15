@@ -26,67 +26,44 @@ import jakarta.persistence.Table;
 public class Product {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "product_id", nullable = false)
-	private UUID id;
-
-	private String status;
+	private Long id;
 
 	@Column(name = "product_name")
 	private String productName;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "product_type_id", referencedColumnName = "product_type_id")
-	private ProductType productType;
+	@JoinColumn(name = "subscription_type_id", referencedColumnName = "subscription_type_id")
+	private SubscriptionType subscriptionType;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "product_id", referencedColumnName = "product_id")
-	private List<Descriptions> descriptions;
+	private String product_type;
 
-	@ElementCollection
-	@CollectionTable(name = "product_tags", joinColumns = @JoinColumn(name = "product_id"))
-	@Column(name = "tag")
-	private List<String> tags;
+	private String description;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
-	private User user;
-
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "price_id", referencedColumnName = "price_id")
-	private Price price;
-
-	public Product(UUID id, String status, String productName, ProductType productType, List<Descriptions> descriptions,
-			List<String> tags, User user, Price price) {
-		super();
-		this.id = id;
-		this.status = status;
-		this.productName = productName;
-		this.productType = productType;
-		this.descriptions = descriptions;
-		this.tags = tags;
-		this.user = user;
-		this.price = price;
-	}
+	private String price;
 
 	public Product() {
 		super();
 	}
 
-	public UUID getId() {
+	public Product(Long id, String productName, SubscriptionType subscriptionType, String product_type,
+			String description, String price) {
+		super();
+		this.id = id;
+		this.productName = productName;
+		this.subscriptionType = subscriptionType;
+		this.product_type = product_type;
+		this.description = description;
+		this.price = price;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public String getProductName() {
@@ -97,43 +74,35 @@ public class Product {
 		this.productName = productName;
 	}
 
-	public ProductType getProductType() {
-		return productType;
+	public SubscriptionType getSubscriptionType() {
+		return subscriptionType;
 	}
 
-	public void setProductType(ProductType productType) {
-		this.productType = productType;
+	public void setSubscriptionType(SubscriptionType subscriptionType) {
+		this.subscriptionType = subscriptionType;
 	}
 
-	public List<Descriptions> getDescriptions() {
-		return descriptions;
+	public String getProduct_type() {
+		return product_type;
 	}
 
-	public void setDescriptions(List<Descriptions> descriptions) {
-		this.descriptions = descriptions;
+	public void setProduct_type(String product_type) {
+		this.product_type = product_type;
 	}
 
-	public List<String> getTags() {
-		return tags;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setTags(List<String> tags) {
-		this.tags = tags;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Price getPrice() {
+	public String getPrice() {
 		return price;
 	}
 
-	public void setPrice(Price price) {
+	public void setPrice(String price) {
 		this.price = price;
 	}
 

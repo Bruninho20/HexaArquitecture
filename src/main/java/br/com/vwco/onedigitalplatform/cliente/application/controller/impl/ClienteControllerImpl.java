@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.vwco.onedigitalplatform.cliente.application.controller.ClienteController;
+import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.CreatePlanRequest;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.RegisterUserRequest;
 import br.com.vwco.onedigitalplatform.cliente.domain.port.incoming.ClientUseCase;
 import jakarta.validation.Valid;
@@ -63,5 +64,13 @@ public class ClienteControllerImpl implements ClienteController {
 		return clientWordUseCase.activateAccount(token);
 	}
 
+	@Override
+	@PostMapping("/product")
+	public ResponseEntity<Object> registerPlan(@Valid @RequestBody CreatePlanRequest createPlanRequest) {
+		LOGGER.info("REGISTER PLAN IMPL");
+		return clientWordUseCase.registerPlan(createPlanRequest);
+	}
+
+	
 	
 }

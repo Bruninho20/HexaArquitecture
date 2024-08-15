@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.CreatePlanRequest;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.RegisterUserRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -77,5 +78,16 @@ public interface ClienteController {
 			@ApiResponse(responseCode = "400", description = "Invalid activation token supplied", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
 	ResponseEntity<Object> activateAccount(@Valid @PathVariable String token);
+	
+	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity User", tags = { "Client" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
+			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
+			@ApiResponse(responseCode = "401", description = "Invalid Authentication supplied", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
+	@ResponseStatus(value = HttpStatus.OK)
+	@PostMapping(path = "/plan")
+	public ResponseEntity<Object> registerPlan(@Valid @RequestBody CreatePlanRequest createPlanRequest);
 
 }

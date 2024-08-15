@@ -73,7 +73,6 @@ public class JwtUtils {
             String firstName = claims.get("firstName", String.class);
 
             User user = new User();
-            user.setId(userId);
             user.setFirstName(firstName);
             user.setEmail(userEmail);
 

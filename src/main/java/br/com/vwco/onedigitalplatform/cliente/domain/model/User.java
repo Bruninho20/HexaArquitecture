@@ -1,6 +1,7 @@
 package br.com.vwco.onedigitalplatform.cliente.domain.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,7 +25,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonIgnore
 	@Column(name = "user_id")
-	private UUID id;
+	private Long id;
 
 	@NotBlank
 	@Column(name = "first_name")
@@ -60,14 +61,17 @@ public class User {
 	@Column(name = "is_activated")
 	private Boolean isActivated;
 
+	@Column(name = "active_subs_type")
+	private List<String> activeSubsType;
+
 	public User() {
 		super();
 	}
 
-	public User(UUID id, @NotBlank String firstName, @NotBlank String surName,
+	public User(Long id, @NotBlank String firstName, @NotBlank String surName,
 			@NotBlank @Size(max = 50) @Email String email, @NotBlank String cpf, @NotBlank String telephone,
 			@Size(max = 120) String password, LocalDateTime createDate, LocalDateTime lastUpdatedDate,
-			Boolean isActivated) {
+			Boolean isActivated, List<String> activeSubsType) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -79,13 +83,14 @@ public class User {
 		this.createDate = createDate;
 		this.lastUpdatedDate = lastUpdatedDate;
 		this.isActivated = isActivated;
+		this.activeSubsType = activeSubsType;
 	}
 
-	public UUID getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -159,6 +164,14 @@ public class User {
 
 	public void setIsActivated(Boolean isActivated) {
 		this.isActivated = isActivated;
+	}
+
+	public List<String> getActiveSubsType() {
+		return activeSubsType;
+	}
+
+	public void setActiveSubsType(List<String> activeSubsType) {
+		this.activeSubsType = activeSubsType;
 	}
 
 }
