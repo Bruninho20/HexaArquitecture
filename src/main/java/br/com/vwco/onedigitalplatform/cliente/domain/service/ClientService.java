@@ -3,7 +3,6 @@ package br.com.vwco.onedigitalplatform.cliente.domain.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,14 +16,15 @@ import org.springframework.stereotype.Service;
 
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.CreatePlanRequest;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.RegisterUserRequest;
+import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.ClientResponse;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.MessageResponse;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.UserDto;
 import br.com.vwco.onedigitalplatform.cliente.common.config.TimeStampUtils;
 import br.com.vwco.onedigitalplatform.cliente.common.constants.LogMessage;
 import br.com.vwco.onedigitalplatform.cliente.common.constants.MessageReturn;
 import br.com.vwco.onedigitalplatform.cliente.domain.mapper.UserMapper;
+import br.com.vwco.onedigitalplatform.cliente.domain.mapper.ValueMapper;
 import br.com.vwco.onedigitalplatform.cliente.domain.model.Product;
-import br.com.vwco.onedigitalplatform.cliente.domain.model.SubscriptionType;
 import br.com.vwco.onedigitalplatform.cliente.domain.model.User;
 import br.com.vwco.onedigitalplatform.cliente.domain.model.UserProduct;
 import br.com.vwco.onedigitalplatform.cliente.domain.port.incoming.ClientUseCase;
@@ -57,6 +57,9 @@ public class ClientService implements ClientUseCase, ClientPort {
 
 	@Autowired
 	private ProductPlanRepository productPlanRepository;
+
+	@Autowired
+	private ValueMapper valueMapper;
 
 	private final UserMapper userMapper = new UserMapper();
 
@@ -103,12 +106,12 @@ public class ClientService implements ClientUseCase, ClientPort {
 
 	@Override
 	public ResponseEntity<Object> getAll() {
-		List<User> users = userJpaRepository.findAll();
+		List<Product> pro = productPlanRepository.findAll();
 
-		if (!users.isEmpty()) {
-			List<UserDto> userDtos = userMapper.toDtoList(users);
-			logger.info(LogMessage.USER_GET_ALL, users.size());
-			return ResponseEntity.status(HttpStatus.OK).body(userDtos);
+		if (!pro.isEmpty()) {
+		
+			logger.info(LogMessage.USER_GET_ALL, pro.size());
+			return ResponseEntity.status(HttpStatus.OK).body(pro);
 		} else {
 			logger.warn(LogMessage.USER_ANY_FOUND);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -159,7 +162,6 @@ public class ClientService implements ClientUseCase, ClientPort {
 		}
 
 		User user = userJpaRepository.findById(userId).orElseThrow();
-
 		Product product = productPlanRepository.findById(productId).orElseThrow();
 
 		List<String> activeSubsTypes = user.getActiveSubsType();
@@ -173,15 +175,132 @@ public class ClientService implements ClientUseCase, ClientPort {
 		user.setActiveSubsType(activeSubsTypes);
 		userJpaRepository.save(user);
 
+		List<UserProduct> existingUserProducts = userProductRepository.findByStatus(productId, userId);
+
+		if (existingUserProducts != null && !existingUserProducts.isEmpty()) {
+			for (UserProduct existingUserProduct : existingUserProducts) {
+				existingUserProduct.setStatus("SUSPEND");
+				userProductRepository.save(existingUserProduct);
+			}
+		}
+
 		UserProduct userProduct = new UserProduct();
 		userProduct.setUser(user);
 		userProduct.setProduct(product);
 		userProduct.setStatus("ACTIVE");
 		userProduct.setIdentifiers(Collections.emptyList());
-
-		userProduct = userProductRepository.save(userProduct);
+		userProductRepository.save(userProduct);
 
 		return ResponseEntity.status(HttpStatus.OK).body(userProduct);
+	}
+
+	@Override
+	public ResponseEntity<Object> getById(Long userId) {
+		logger.info("Getting products for user with ID: {}", userId);
+
+		User user = userJpaRepository.findByUserId(userId.longValue());
+		List<Object> responses = new ArrayList<>();
+
+		if (user != null) {
+			user.getActiveSubsType().stream().forEach(map -> {
+				map = map.trim();
+				switch (map) {
+				case "value_add_service": {
+					responses.add(getByValueAdd(userId).getBody());
+					break;
+				}
+				case "pospaid": {
+					responses.add(getByPospaid(userId).getBody());
+					break;
+				}
+				case "prepaid": {
+					responses.add(getByPrepaid(userId).getBody());
+					break;
+				}
+				case "internet": {
+					responses.add(getByInternet(userId).getBody());
+					break;
+
+				}
+				default:
+					throw new IllegalArgumentException("Unexpected value: " + map);
+				}
+			});
+		}
+
+		return ResponseEntity.status(HttpStatus.OK).body(responses);
+	}
+
+	@Override
+	public ResponseEntity<Object> getByPospaid(Long userId) {
+		logger.info("Getting products for user with ID: {}", userId);
+
+		Long pospaid = 2L;
+
+		List<Object[]> userProducts = productPlanRepository.findByValueUser(userId, pospaid);
+
+		if (userProducts.isEmpty()) {
+			logger.warn("No products found for user with ID: {}", userId);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No products found for user with ID: " + userId);
+		}
+
+		List<ClientResponse> productDTOs = valueMapper.mapToProductDTOList(userProducts);
+
+		return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
+	}
+
+	@Override
+	public ResponseEntity<Object> getByPrepaid(Long userId) {
+		logger.info("Getting products for user with ID: {}", userId);
+
+		Long prepaid = 1L;
+
+		List<Object[]> userProducts = productPlanRepository.findByValueUser(userId, prepaid);
+
+		if (userProducts.isEmpty()) {
+			logger.warn("No products found for user with ID: {}", userId);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No products found for user with ID: " + userId);
+		}
+
+		List<ClientResponse> productDTOs = valueMapper.mapToProductDTOList(userProducts);
+
+		return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
+	}
+
+	@Override
+	public ResponseEntity<Object> getByInternet(Long userId) {
+		logger.info("Getting products for user with ID: {}", userId);
+
+		Long internet = 3L;
+
+		List<Object[]> userProducts = productPlanRepository.findByValueUser(userId, internet);
+
+		if (userProducts.isEmpty()) {
+			logger.warn("No products found for user with ID: {}", userId);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No products found for user with ID: " + userId);
+		}
+
+		List<ClientResponse> productDTOs = valueMapper.mapToProductDTOList(userProducts);
+
+		return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
+	}
+
+	@Override
+	public ResponseEntity<Object> getByValueAdd(Long userId) {
+		logger.info("Getting products for user with ID: {}", userId);
+
+		Long subscriptionTypeId = 4L;
+
+		List<Object[]> userProducts = productPlanRepository.findByValueUser(userId, subscriptionTypeId);
+
+		if (userProducts.isEmpty()) {
+			logger.warn("No products found for user with ID: {}", userId);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No products found for user with ID: " + userId);
+		}
+
+		List<ClientResponse> productDTOs = valueMapper.mapToProductDTOList(userProducts);
+
+		return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
 	}
 
 }

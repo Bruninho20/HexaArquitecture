@@ -35,7 +35,7 @@ public interface ClienteController {
 			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(path = "/products")
-	public ResponseEntity<List<Object>> getAll();
+	public ResponseEntity<Object> getAll();
 
 	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity", tags = { "Clients" })
 	@ApiResponses(value = {
@@ -56,9 +56,8 @@ public interface ClienteController {
 			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
 	@ResponseStatus(value = HttpStatus.OK)
-	@GetMapping(path = "/user/{user_id}")
-	public ResponseEntity<Object> getById(
-			@Parameter(description = "", example = "1") @PathVariable(name = "id") Integer id);
+	@GetMapping(path = "/user")
+	public ResponseEntity<Object> getById(@PathVariable Long id);
 
 	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity User", tags = { "Client" })
 	@ApiResponses(value = {
@@ -72,13 +71,13 @@ public interface ClienteController {
 	public ResponseEntity<Object> crateUser(@Valid @RequestBody RegisterUserRequest registerUserRequest);
 
 	@Operation(summary = "Activate Account", description = "Activates a user account using the activation token", tags = {
-			"user" })
+			"User" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
 			@ApiResponse(responseCode = "400", description = "Invalid activation token supplied", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal server error", content = @Content) })
 	ResponseEntity<Object> activateAccount(@Valid @PathVariable String token);
-	
+
 	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity User", tags = { "Client" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
@@ -89,5 +88,49 @@ public interface ClienteController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@PostMapping(path = "/plan")
 	public ResponseEntity<Object> registerPlan(@Valid @RequestBody CreatePlanRequest createPlanRequest);
+
+	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity for id", tags = { "Products by id" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
+			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
+			@ApiResponse(responseCode = "401", description = "Invalid Authentication supplied", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
+	@ResponseStatus(value = HttpStatus.OK)
+	@GetMapping(path = "/user/pospaid")
+	public ResponseEntity<Object> getByPospaid(@PathVariable Long userId);
+
+	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity for id", tags = { "Products by id" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
+			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
+			@ApiResponse(responseCode = "401", description = "Invalid Authentication supplied", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
+	@ResponseStatus(value = HttpStatus.OK)
+	@GetMapping(path = "/user/prepaid")
+	public ResponseEntity<Object> getByPrepaid(@PathVariable Long userId);
+
+	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity for id", tags = { "Products by id" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
+			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
+			@ApiResponse(responseCode = "401", description = "Invalid Authentication supplied", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
+	@ResponseStatus(value = HttpStatus.OK)
+	@GetMapping(path = "/user/internet")
+	public ResponseEntity<Object> getByInternet(@PathVariable Long userId);
+
+	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity for id", tags = { "Products by id" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
+			@ApiResponse(responseCode = "400", description = "Invalid Login Data supplied", content = @Content),
+			@ApiResponse(responseCode = "401", description = "Invalid Authentication supplied", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Invalid Authorization supplied", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
+	@ResponseStatus(value = HttpStatus.OK)
+	@GetMapping(path = "/user")
+	public ResponseEntity<Object> getByValueAdd(Long userId);
 
 }

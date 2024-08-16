@@ -17,4 +17,7 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
 	
 	List<User> findUserByCpf(String cpf);
 	
+	@Query(value="SELECT * FROM users_data where user_id = :userId", nativeQuery = true)
+	User findByUserId(@Param("userId")Long userId);
+	
 }

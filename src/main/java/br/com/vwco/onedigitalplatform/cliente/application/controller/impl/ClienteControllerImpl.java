@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.vwco.onedigitalplatform.cliente.application.controller.ClienteController;
@@ -39,9 +40,9 @@ public class ClienteControllerImpl implements ClienteController {
 
 	@Override
 	@GetMapping("/products")
-	public ResponseEntity<List<Object>> getAll() {
+	public ResponseEntity<Object>getAll() {
 		LOGGER.info("GET ALL PRODUCTS");
-		return null;
+		return clientWordUseCase.getAll();
 	}
 
 	@Override
@@ -49,12 +50,6 @@ public class ClienteControllerImpl implements ClienteController {
 	public ResponseEntity<Object> getClients() {
 		LOGGER.info("GET ALL CLIENTS");
 		return clientWordUseCase.getAll();
-	}
-
-	@Override
-	@GetMapping("/user/{id}")
-	public ResponseEntity<Object> getById(@PathVariable("id") Integer id) {
-		return null;
 	}
 
 	@Override
@@ -71,6 +66,34 @@ public class ClienteControllerImpl implements ClienteController {
 		return clientWordUseCase.registerPlan(createPlanRequest);
 	}
 
-	
-	
+	@Override
+	@GetMapping("/user")
+	public ResponseEntity<Object> getById(@RequestParam Long id) {
+		return clientWordUseCase.getById(id);
+	}
+
+	@Override
+	@GetMapping("/pospaid")
+	public ResponseEntity<Object> getByPospaid(@RequestParam Long userId) {
+		return clientWordUseCase.getByPospaid(userId);
+	}
+
+	@Override
+	@GetMapping("/prepaid")
+	public ResponseEntity<Object> getByPrepaid(@RequestParam Long userId) {
+		return clientWordUseCase.getByPrepaid(userId);
+	}
+
+	@Override
+	@GetMapping("/internet")
+	public ResponseEntity<Object> getByInternet(@RequestParam Long userId) {
+		return clientWordUseCase.getByInternet(userId);
+	}
+
+	@Override
+	@GetMapping("/value")
+	public ResponseEntity<Object> getByValueAdd(@RequestParam Long userId) {
+		return clientWordUseCase.getByValueAdd(userId);
+	}
+
 }
