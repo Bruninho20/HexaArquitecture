@@ -1,6 +1,6 @@
 # Sever
 server:
-  port: 8084
+  port: 8080
 
 # Spring  
 spring:
@@ -63,3 +63,9 @@ logging:
   level:
     org.springframework: ERROR
     br.com.vwco.onedigitalplatform: DEBUG
+
+management:
+     endpoints:
+         web:
+            exposure:
+                include: [ "prometheus" ]
