@@ -66,6 +66,11 @@ logging:
 
 management:
      endpoints:
+         health: 
+           enabled: true
          web:
             exposure:
-                include: [ "prometheus" ]
+                include: [ "*" ]
+         jmx:
+            exposure: 
+                include: health			
