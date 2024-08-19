@@ -61,8 +61,6 @@ public class ClientService implements ClientUseCase, ClientPort {
 	@Autowired
 	private ValueMapper valueMapper;
 
-	private final UserMapper userMapper = new UserMapper();
-
 	@Override
 	public ResponseEntity<Object> crateUser(RegisterUserRequest registerUserRequest) {
 		logger.info("Service");
@@ -106,7 +104,7 @@ public class ClientService implements ClientUseCase, ClientPort {
 
 	@Override
 	public ResponseEntity<Object> getAll() {
-		List<Product> pro = productPlanRepository.findAll();
+		List<User> pro = userJpaRepository.findAll();
 
 		if (!pro.isEmpty()) {
 		

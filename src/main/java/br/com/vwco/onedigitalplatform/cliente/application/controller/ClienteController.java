@@ -132,5 +132,7 @@ public interface ClienteController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(path = "/user")
 	public ResponseEntity<Object> getByValueAdd(Long userId);
+	
+	
 
 }
