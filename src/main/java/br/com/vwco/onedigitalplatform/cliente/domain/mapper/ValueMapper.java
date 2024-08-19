@@ -1,11 +1,13 @@
 package br.com.vwco.onedigitalplatform.cliente.domain.mapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.ClientResponse;
+import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.InternetResponse;
 
 @Component
 public class ValueMapper {
@@ -29,4 +31,26 @@ public class ValueMapper {
 
 		return responseList;
 	}
+	
+	
+	 public List<InternetResponse> mapToInternetDTOList(List<Object[]> objList) {
+	        List<InternetResponse> responseList = new ArrayList<>();
+
+	        for (Object[] objArray : objList) {
+	            InternetResponse response = new InternetResponse();
+	            response.setId((String) objArray[0].toString());  
+	            response.setStatus("active");
+	            response.setProductName((String) objArray[1]);
+	            response.setIdentifiers(Collections.singletonList("+51939791073"));
+	            response.setProductType("internet");
+	            response.setStartDate("2024-03-14T23:00:00+01:00");
+	            response.setDescriptions(Collections.singletonList(
+	                new InternetResponse.Description((String) objArray[3])
+	            ));
+
+	            responseList.add(response);
+	        }
+
+	        return responseList;
+	    }
 }

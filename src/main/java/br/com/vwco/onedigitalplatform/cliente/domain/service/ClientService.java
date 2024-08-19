@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.CreatePlanRequest;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.request.RegisterUserRequest;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.ClientResponse;
+import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.InternetResponse;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.MessageResponse;
 import br.com.vwco.onedigitalplatform.cliente.application.controller.dto.response.UserDto;
 import br.com.vwco.onedigitalplatform.cliente.common.config.TimeStampUtils;
@@ -278,7 +279,7 @@ public class ClientService implements ClientUseCase, ClientPort {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No products found for user with ID: " + userId);
 		}
 
-		List<ClientResponse> productDTOs = valueMapper.mapToProductDTOList(userProducts);
+		List<InternetResponse> productDTOs = valueMapper.mapToInternetDTOList(userProducts);
 
 		return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
 	}
