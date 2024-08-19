@@ -11,7 +11,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>br.com.vwco.onedigitalplatform</groupId>
+	<groupId>br.com.fiap.products.cliente</groupId>
 	<artifactId>hexa-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
@@ -21,7 +21,7 @@
 		<java.version>17</java.version>
 		<spring-cloud.version>2021.0.3</spring-cloud.version>
 		<start-class>
-			br.com.vwco.onedigitalplatform.cliente.ClienteApplication</start-class>
+			br.com.fiap.products.cliente.ClienteApplication</start-class>
 	</properties>
 
 	<dependencyManagement>

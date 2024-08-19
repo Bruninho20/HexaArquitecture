@@ -62,7 +62,7 @@ springdoc:
 logging:
   level:
     org.springframework: ERROR
-    br.com.vwco.onedigitalplatform: DEBUG
+    br.com.fiap.products: DEBUG
 
 management:
      endpoints:
