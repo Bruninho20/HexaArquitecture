@@ -3,6 +3,8 @@ package br.com.fiap.products.cliente.domain.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,17 +15,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import br.com.fiap.products.cliente.application.controller.dto.request.CreatePlanRequest;
 import br.com.fiap.products.cliente.application.controller.dto.request.RegisterUserRequest;
 import br.com.fiap.products.cliente.application.controller.dto.response.ClientResponse;
 import br.com.fiap.products.cliente.application.controller.dto.response.InternetResponse;
 import br.com.fiap.products.cliente.application.controller.dto.response.MessageResponse;
-import br.com.fiap.products.cliente.application.controller.dto.response.UserDto;
 import br.com.fiap.products.cliente.common.config.TimeStampUtils;
 import br.com.fiap.products.cliente.common.constants.LogMessage;
 import br.com.fiap.products.cliente.common.constants.MessageReturn;
-import br.com.fiap.products.cliente.domain.mapper.UserMapper;
 import br.com.fiap.products.cliente.domain.mapper.ValueMapper;
 import br.com.fiap.products.cliente.domain.model.Product;
 import br.com.fiap.products.cliente.domain.model.User;
@@ -108,7 +109,7 @@ public class ClientService implements ClientUseCase, ClientPort {
 		List<User> pro = userJpaRepository.findAll();
 
 		if (!pro.isEmpty()) {
-		
+
 			logger.info(LogMessage.USER_GET_ALL, pro.size());
 			return ResponseEntity.status(HttpStatus.OK).body(pro);
 		} else {
@@ -209,7 +210,7 @@ public class ClientService implements ClientUseCase, ClientPort {
 					break;
 				}
 				case "pospaid": {
-					responses.add(getByPospaid(userId).getBody());
+					responses.add(getByPospaid(userId));
 					break;
 				}
 				case "prepaid": {
@@ -233,7 +234,7 @@ public class ClientService implements ClientUseCase, ClientPort {
 	@Override
 	public ResponseEntity<Object> getByPospaid(Long userId) {
 		logger.info("Getting products for user with ID: {}", userId);
-
+		
 		Long pospaid = 2L;
 
 		List<Object[]> userProducts = productPlanRepository.findByValueUser(userId, pospaid);
@@ -242,8 +243,9 @@ public class ClientService implements ClientUseCase, ClientPort {
 			logger.warn("No products found for user with ID: {}", userId);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No products found for user with ID: " + userId);
 		}
-
+		
 		List<ClientResponse> productDTOs = valueMapper.mapToProductDTOList(userProducts);
+
 
 		return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
 	}

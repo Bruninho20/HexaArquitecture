@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import br.com.fiap.products.cliente.application.controller.dto.request.CreatePlanRequest;
 import br.com.fiap.products.cliente.application.controller.dto.request.RegisterUserRequest;
@@ -98,7 +99,7 @@ public interface ClienteController {
 			@ApiResponse(responseCode = "404", description = "Login or Password not found", content = @Content) })
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(path = "/user/pospaid")
-	public ResponseEntity<Object> getByPospaid(@PathVariable Long userId);
+	public ResponseEntity<Object> getByPospaid(Long userId);
 
 	@Operation(summary = "Cliente - Vivo.", description = "Returns a Entity for id", tags = { "Products by id" })
 	@ApiResponses(value = {

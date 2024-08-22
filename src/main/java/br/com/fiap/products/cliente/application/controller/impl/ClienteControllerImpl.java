@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import br.com.fiap.products.cliente.application.controller.ClienteController;
 import br.com.fiap.products.cliente.application.controller.dto.request.CreatePlanRequest;
@@ -74,7 +75,7 @@ public class ClienteControllerImpl implements ClienteController {
 
 	@Override
 	@GetMapping("/pospaid")
-	public ResponseEntity<Object> getByPospaid(@RequestParam Long userId) {
+	public ResponseEntity<Object> getByPospaid(@RequestParam Long userId){
 		return clientWordUseCase.getByPospaid(userId);
 	}
 

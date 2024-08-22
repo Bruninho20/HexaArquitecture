@@ -1,9 +1,8 @@
 package br.com.fiap.products.cliente.domain.port.incoming;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import br.com.fiap.products.cliente.application.controller.dto.request.CreatePlanRequest;
 import br.com.fiap.products.cliente.application.controller.dto.request.RegisterUserRequest;
