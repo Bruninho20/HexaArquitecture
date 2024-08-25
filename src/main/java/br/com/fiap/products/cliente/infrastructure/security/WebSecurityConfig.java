@@ -28,7 +28,7 @@ public class WebSecurityConfig {
         "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
         "/swagger/**","/api/cliente/**",
         "/access/api/auth/signin/**", "/swagger-ui/index.html", "/access/api/device/**",
-        "/api/cliente/activate/**","/actuator/**","/client/products"
+        "/api/cliente/activate/**","/actuator/**","/client/products","/api/**"
     };
 
 //    @Bean
