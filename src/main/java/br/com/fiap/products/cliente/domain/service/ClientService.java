@@ -17,6 +17,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.azure.storage.queue.QueueClient;
+import com.azure.storage.queue.QueueClientBuilder;
+import com.azure.storage.queue.models.SendMessageResult;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import br.com.fiap.products.cliente.application.controller.dto.request.CreatePlanRequest;
 import br.com.fiap.products.cliente.application.controller.dto.request.RegisterUserRequest;
 import br.com.fiap.products.cliente.application.controller.dto.response.ClientResponse;
@@ -36,6 +43,10 @@ import br.com.fiap.products.cliente.infrastructure.repository.UserJpaRepository;
 import br.com.fiap.products.cliente.infrastructure.repository.UserProductRepository;
 import br.com.fiap.products.cliente.infrastructure.security.jwt.JwtUtils;
 import jakarta.validation.Valid;
+import com.azure.identity.*;
+import com.azure.storage.queue.*;
+import com.azure.storage.queue.models.*;
+import java.io.*;
 
 @Service
 public class ClientService implements ClientUseCase, ClientPort {
@@ -106,6 +117,22 @@ public class ClientService implements ClientUseCase, ClientPort {
 
 	@Override
 	public ResponseEntity<Object> getAll() {
+		List<Product> pro = productPlanRepository.findAll();
+
+		if (!pro.isEmpty()) {
+
+			logger.info(LogMessage.USER_GET_ALL, pro.size());
+			return ResponseEntity.status(HttpStatus.OK).body(pro);
+		} else {
+			logger.warn(LogMessage.USER_ANY_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new MessageResponse(getMessage(MessageReturn.USER_ANY_FOUND)));
+		}
+	}
+	
+
+	@Override
+	public ResponseEntity<Object> getClients() {
 		List<User> pro = userJpaRepository.findAll();
 
 		if (!pro.isEmpty()) {
@@ -152,47 +179,69 @@ public class ClientService implements ClientUseCase, ClientPort {
 
 	@Override
 	public ResponseEntity<Object> registerPlan(@Valid CreatePlanRequest createPlanRequest) {
-		logger.info("Service");
+	    logger.info("Service");
 
-		Long userId = createPlanRequest.getIdUser();
-		Long productId = createPlanRequest.getIdProduct();
+	    Long userId = createPlanRequest.getIdUser();
+	    Long productId = createPlanRequest.getIdProduct();
 
-		if (userId == null || productId == null) {
-			return ResponseEntity.badRequest().body("User ID and Product ID must not be null");
-		}
+	    if (userId == null || productId == null) {
+	        return ResponseEntity.badRequest().body("User ID and Product ID must not be null");
+	    }
 
-		User user = userJpaRepository.findById(userId).orElseThrow();
-		Product product = productPlanRepository.findById(productId).orElseThrow();
+	    User user = userJpaRepository.findById(userId).orElseThrow();
+	    Product product = productPlanRepository.findById(productId).orElseThrow();
 
-		List<String> activeSubsTypes = user.getActiveSubsType();
-		if (activeSubsTypes == null) {
-			activeSubsTypes = new ArrayList<>();
-		}
-		String newSubscriptionDescription = product.getSubscriptionType().getDescription();
-		if (!activeSubsTypes.contains(newSubscriptionDescription)) {
-			activeSubsTypes.add(newSubscriptionDescription);
-		}
-		user.setActiveSubsType(activeSubsTypes);
-		userJpaRepository.save(user);
+	    List<String> activeSubsTypes = user.getActiveSubsType();
+	    if (activeSubsTypes == null) {
+	        activeSubsTypes = new ArrayList<>();
+	    }
+	    String newSubscriptionDescription = product.getSubscriptionType().getDescription();
+	    if (!activeSubsTypes.contains(newSubscriptionDescription)) {
+	        activeSubsTypes.add(newSubscriptionDescription);
+	    }
+	    user.setActiveSubsType(activeSubsTypes);
+	    userJpaRepository.save(user);
 
-		List<UserProduct> existingUserProducts = userProductRepository.findByStatus(productId, userId);
+	    List<UserProduct> existingUserProducts = userProductRepository.findByStatus(productId, userId);
 
-		if (existingUserProducts != null && !existingUserProducts.isEmpty()) {
-			for (UserProduct existingUserProduct : existingUserProducts) {
-				existingUserProduct.setStatus("SUSPEND");
-				userProductRepository.save(existingUserProduct);
-			}
-		}
+	    if (existingUserProducts != null && !existingUserProducts.isEmpty()) {
+	        for (UserProduct existingUserProduct : existingUserProducts) {
+	            existingUserProduct.setStatus("SUSPEND");
+	            userProductRepository.save(existingUserProduct);
+	        }
+	    }
 
-		UserProduct userProduct = new UserProduct();
-		userProduct.setUser(user);
-		userProduct.setProduct(product);
-		userProduct.setStatus("ACTIVE");
-		userProduct.setIdentifiers(Collections.emptyList());
-		userProductRepository.save(userProduct);
+	    UserProduct userProduct = new UserProduct();
+	    userProduct.setUser(user);
+	    userProduct.setProduct(product);
+	    userProduct.setStatus("ACTIVE");
+	    userProduct.setIdentifiers(Collections.emptyList());
+	    userProductRepository.save(userProduct);
 
-		return ResponseEntity.status(HttpStatus.OK).body(userProduct);
+//	    ObjectMapper objectMapper = new ObjectMapper();
+//	    String userProductJson;
+//	    try {
+//	        userProductJson = objectMapper.writeValueAsString(userProduct);
+//	    } catch (JsonProcessingException e) {
+//	        logger.error("Error serializing UserProduct object", e);
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request");
+//	    }
+//
+//	    logger.info("\nAdding messages to the queue...");
+//
+//	    String queueName = "vivo2024queue-" + java.util.UUID.randomUUID();
+//
+//	    QueueClient queueClient = new QueueClientBuilder()
+//	            .endpoint("https://vivo2024.queue.core.windows.net/vivofila")
+//	            .queueName(queueName)
+//	            .credential(new DefaultAzureCredentialBuilder().build())
+//	            .buildClient();
+//
+//	    queueClient.sendMessage(userProductJson);
+
+	    return ResponseEntity.status(HttpStatus.OK).body(userProduct);
 	}
+
 
 	@Override
 	public ResponseEntity<Object> getById(Long userId) {
@@ -303,5 +352,6 @@ public class ClientService implements ClientUseCase, ClientPort {
 
 		return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
 	}
+
 
 }

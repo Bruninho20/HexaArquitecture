@@ -50,7 +50,7 @@ public class ClienteControllerImpl implements ClienteController {
 	@GetMapping("/clients")
 	public ResponseEntity<Object> getClients() {
 		LOGGER.info("GET ALL CLIENTS");
-		return clientWordUseCase.getAll();
+		return clientWordUseCase.getClients();
 	}
 
 	@Override

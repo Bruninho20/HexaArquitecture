@@ -28,5 +28,7 @@ public interface ClientUseCase {
 	ResponseEntity<Object> getByInternet(@PathVariable Long userId);
 
 	ResponseEntity<Object> getByValueAdd(@PathVariable Long userId);
+	
+	ResponseEntity<Object> getClients();
 
 }
