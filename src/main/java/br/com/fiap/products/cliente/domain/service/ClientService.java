@@ -218,26 +218,27 @@ public class ClientService implements ClientUseCase, ClientPort {
 	    userProduct.setIdentifiers(Collections.emptyList());
 	    userProductRepository.save(userProduct);
 
-//	    ObjectMapper objectMapper = new ObjectMapper();
-//	    String userProductJson;
-//	    try {
-//	        userProductJson = objectMapper.writeValueAsString(userProduct);
-//	    } catch (JsonProcessingException e) {
-//	        logger.error("Error serializing UserProduct object", e);
-//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request");
-//	    }
-//
-//	    logger.info("\nAdding messages to the queue...");
-//
-//	    String queueName = "vivo2024queue-" + java.util.UUID.randomUUID();
-//
-//	    QueueClient queueClient = new QueueClientBuilder()
-//	            .endpoint("https://vivo2024.queue.core.windows.net/vivofila")
-//	            .queueName(queueName)
-//	            .credential(new DefaultAzureCredentialBuilder().build())
-//	            .buildClient();
-//
-//	    queueClient.sendMessage(userProductJson);
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    String userProductJson;
+	    try {
+	        userProductJson = objectMapper.writeValueAsString(userProduct);
+	    } catch (JsonProcessingException e) {
+	        logger.error("Error serializing UserProduct object", e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request");
+	    }
+
+	    logger.info("\nAdding messages to the queue...");
+
+	    String queueName = "vivofila";
+
+	    QueueClient queueClient = new QueueClientBuilder()
+	            .endpoint("https://vivo2024.queue.core.windows.net")
+	            .queueName(queueName)
+	            .credential(new DefaultAzureCredentialBuilder().build())
+	            .buildClient();
+	    
+	    queueClient.createIfNotExists();
+	    queueClient.sendMessage(userProductJson);
 
 	    return ResponseEntity.status(HttpStatus.OK).body(userProduct);
 	}
