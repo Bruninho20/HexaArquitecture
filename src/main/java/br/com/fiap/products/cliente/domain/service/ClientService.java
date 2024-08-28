@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -245,6 +246,7 @@ public class ClientService implements ClientUseCase, ClientPort {
 
 
 	@Override
+	@Cacheable(value = "users", key = "#userId")
 	public ResponseEntity<Object> getById(Long userId) {
 		logger.info("Getting products for user with ID: {}", userId);
 
@@ -282,6 +284,7 @@ public class ClientService implements ClientUseCase, ClientPort {
 	}
 
 	@Override
+	@Cacheable(value = "pospaidProducts", key = "#userId")
 	public ResponseEntity<Object> getByPospaid(Long userId) {
 		logger.info("Getting products for user with ID: {}", userId);
 		
@@ -301,6 +304,7 @@ public class ClientService implements ClientUseCase, ClientPort {
 	}
 
 	@Override
+	@Cacheable(value = "prepaidProducts", key = "#userId")
 	public ResponseEntity<Object> getByPrepaid(Long userId) {
 		logger.info("Getting products for user with ID: {}", userId);
 
@@ -319,6 +323,7 @@ public class ClientService implements ClientUseCase, ClientPort {
 	}
 
 	@Override
+	@Cacheable(value = "internetProducts", key = "#userId")
 	public ResponseEntity<Object> getByInternet(Long userId) {
 		logger.info("Getting products for user with ID: {}", userId);
 
@@ -331,12 +336,13 @@ public class ClientService implements ClientUseCase, ClientPort {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No products found for user with ID: " + userId);
 		}
 
-		List<InternetResponse> productDTOs = valueMapper.mapToInternetDTOList(userProducts);
+		List<ClientResponse> productDTOs = valueMapper.mapToProductDTOList(userProducts);
 
 		return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
 	}
 
 	@Override
+	@Cacheable(value = "valueAddProducts", key = "#userId")
 	public ResponseEntity<Object> getByValueAdd(Long userId) {
 		logger.info("Getting products for user with ID: {}", userId);
 
