@@ -130,7 +130,6 @@ public class ClientService implements ClientUseCase, ClientPort {
 					.body(new MessageResponse(getMessage(MessageReturn.USER_ANY_FOUND)));
 		}
 	}
-	
 
 	@Override
 	public ResponseEntity<Object> getClients() {
@@ -180,70 +179,66 @@ public class ClientService implements ClientUseCase, ClientPort {
 
 	@Override
 	public ResponseEntity<Object> registerPlan(@Valid CreatePlanRequest createPlanRequest) {
-	    logger.info("Service");
+		logger.info("Service");
 
-	    Long userId = createPlanRequest.getIdUser();
-	    Long productId = createPlanRequest.getIdProduct();
+		Long userId = createPlanRequest.getIdUser();
+		Long productId = createPlanRequest.getIdProduct();
 
-	    if (userId == null || productId == null) {
-	        return ResponseEntity.badRequest().body("User ID and Product ID must not be null");
-	    }
+		if (userId == null || productId == null) {
+			return ResponseEntity.badRequest().body("User ID and Product ID must not be null");
+		}
 
-	    User user = userJpaRepository.findById(userId).orElseThrow();
-	    Product product = productPlanRepository.findById(productId).orElseThrow();
+		User user = userJpaRepository.findById(userId).orElseThrow();
+		Product product = productPlanRepository.findById(productId).orElseThrow();
 
-	    List<String> activeSubsTypes = user.getActiveSubsType();
-	    if (activeSubsTypes == null) {
-	        activeSubsTypes = new ArrayList<>();
-	    }
-	    String newSubscriptionDescription = product.getSubscriptionType().getDescription();
-	    if (!activeSubsTypes.contains(newSubscriptionDescription)) {
-	        activeSubsTypes.add(newSubscriptionDescription);
-	    }
-	    user.setActiveSubsType(activeSubsTypes);
-	    userJpaRepository.save(user);
+		List<String> activeSubsTypes = user.getActiveSubsType();
+		if (activeSubsTypes == null) {
+			activeSubsTypes = new ArrayList<>();
+		}
+		String newSubscriptionDescription = product.getSubscriptionType().getDescription();
+		if (!activeSubsTypes.contains(newSubscriptionDescription)) {
+			activeSubsTypes.add(newSubscriptionDescription);
+		}
+		user.setActiveSubsType(activeSubsTypes);
+		userJpaRepository.save(user);
 
-	    List<UserProduct> existingUserProducts = userProductRepository.findByStatus(productId, userId);
+		List<UserProduct> existingUserProducts = userProductRepository.findByStatus(productId, userId);
 
-	    if (existingUserProducts != null && !existingUserProducts.isEmpty()) {
-	        for (UserProduct existingUserProduct : existingUserProducts) {
-	            existingUserProduct.setStatus("SUSPEND");
-	            userProductRepository.save(existingUserProduct);
-	        }
-	    }
+		if (existingUserProducts != null && !existingUserProducts.isEmpty()) {
+			for (UserProduct existingUserProduct : existingUserProducts) {
+				existingUserProduct.setStatus("SUSPEND");
+				userProductRepository.save(existingUserProduct);
+			}
+		}
 
-	    UserProduct userProduct = new UserProduct();
-	    userProduct.setUser(user);
-	    userProduct.setProduct(product);
-	    userProduct.setStatus("ACTIVE");
-	    userProduct.setIdentifiers(Collections.emptyList());
-	    userProductRepository.save(userProduct);
+		UserProduct userProduct = new UserProduct();
+		userProduct.setUser(user);
+		userProduct.setProduct(product);
+		userProduct.setStatus("ACTIVE");
+		userProduct.setIdentifiers(Collections.emptyList());
+		userProductRepository.save(userProduct);
 
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    String userProductJson;
-	    try {
-	        userProductJson = objectMapper.writeValueAsString(userProduct);
-	    } catch (JsonProcessingException e) {
-	        logger.error("Error serializing UserProduct object", e);
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request");
-	    }
+		ObjectMapper objectMapper = new ObjectMapper();
+		String userProductJson;
+		try {
+			userProductJson = objectMapper.writeValueAsString(userProduct);
+		} catch (JsonProcessingException e) {
+			logger.error("Error serializing UserProduct object", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request");
+		}
 
-	    logger.info("\nAdding messages to the queue...");
+		logger.info("\nAdding messages to the queue...");
 
-	    String queueName = "vivofila";
+		String queueName = "vivofila";
 
-	    QueueClient queueClient = new QueueClientBuilder()
-	            .endpoint("https://vivo2024.queue.core.windows.net")
-	            .queueName(queueName)
-	            .credential(new DefaultAzureCredentialBuilder().build())
-	            .buildClient();
-	    
-	    queueClient.createIfNotExists();
-	    queueClient.sendMessage(userProductJson);
+		QueueClient queueClient = new QueueClientBuilder().endpoint("https://vivo2024.queue.core.windows.net")
+				.queueName(queueName).credential(new DefaultAzureCredentialBuilder().build()).buildClient();
 
-	    return ResponseEntity.status(HttpStatus.OK).body(userProduct);
+		queueClient.createIfNotExists();
+		queueClient.sendMessage(userProductJson);
+
+		return ResponseEntity.status(HttpStatus.OK).body(userProduct);
 	}
-
 
 	@Override
 	@Cacheable(value = "users", key = "#userId")
@@ -251,28 +246,27 @@ public class ClientService implements ClientUseCase, ClientPort {
 		logger.info("Getting products for user with ID: {}", userId);
 
 		User user = userJpaRepository.findByUserId(userId.longValue());
-		List<Object> responses = new ArrayList<>();
+		List<ClientResponse> allProducts = new ArrayList<>();
 
 		if (user != null) {
 			user.getActiveSubsType().stream().forEach(map -> {
 				map = map.trim();
 				switch (map) {
 				case "value_add_service": {
-					responses.add(getByValueAdd(userId).getBody());
+					allProducts.addAll((List<ClientResponse>) getByValueAdd(userId).getBody());
 					break;
 				}
 				case "pospaid": {
-					responses.add(getByPospaid(userId));
+					allProducts.addAll((List<ClientResponse>) getByPospaid(userId).getBody());
 					break;
 				}
 				case "prepaid": {
-					responses.add(getByPrepaid(userId).getBody());
+					allProducts.addAll((List<ClientResponse>) getByPrepaid(userId).getBody());
 					break;
 				}
 				case "internet": {
-					responses.add(getByInternet(userId).getBody());
+					allProducts.addAll((List<ClientResponse>) getByInternet(userId).getBody());
 					break;
-
 				}
 				default:
 					throw new IllegalArgumentException("Unexpected value: " + map);
@@ -280,14 +274,14 @@ public class ClientService implements ClientUseCase, ClientPort {
 			});
 		}
 
-		return ResponseEntity.status(HttpStatus.OK).body(responses);
+		return ResponseEntity.status(HttpStatus.OK).body(allProducts);
 	}
 
 	@Override
 	@Cacheable(value = "pospaidProducts", key = "#userId")
 	public ResponseEntity<Object> getByPospaid(Long userId) {
 		logger.info("Getting products for user with ID: {}", userId);
-		
+
 		Long pospaid = 2L;
 
 		List<Object[]> userProducts = productPlanRepository.findByValueUser(userId, pospaid);
@@ -296,9 +290,8 @@ public class ClientService implements ClientUseCase, ClientPort {
 			logger.warn("No products found for user with ID: {}", userId);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No products found for user with ID: " + userId);
 		}
-		
-		List<ClientResponse> productDTOs = valueMapper.mapToProductDTOList(userProducts);
 
+		List<ClientResponse> productDTOs = valueMapper.toDtoList(userProducts);
 
 		return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
 	}
@@ -317,7 +310,7 @@ public class ClientService implements ClientUseCase, ClientPort {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No products found for user with ID: " + userId);
 		}
 
-		List<ClientResponse> productDTOs = valueMapper.mapToProductDTOList(userProducts);
+		List<ClientResponse> productDTOs = valueMapper.toDtoList(userProducts);
 
 		return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
 	}
@@ -336,7 +329,7 @@ public class ClientService implements ClientUseCase, ClientPort {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No products found for user with ID: " + userId);
 		}
 
-		List<ClientResponse> productDTOs = valueMapper.mapToProductDTOList(userProducts);
+		List<ClientResponse> productDTOs = valueMapper.toDtoList(userProducts);
 
 		return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
 	}
@@ -355,10 +348,9 @@ public class ClientService implements ClientUseCase, ClientPort {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No products found for user with ID: " + userId);
 		}
 
-		List<ClientResponse> productDTOs = valueMapper.mapToProductDTOList(userProducts);
+		List<ClientResponse> productDTOs = valueMapper.toDtoList(userProducts);
 
 		return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
 	}
-
 
 }

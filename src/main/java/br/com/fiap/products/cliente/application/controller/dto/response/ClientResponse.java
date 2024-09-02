@@ -1,37 +1,33 @@
 package br.com.fiap.products.cliente.application.controller.dto.response;
 
+import java.util.List;
+
 public class ClientResponse {
 
-	private Long productId;
+	private String id;
+	private String status;
 	private String productName;
-	private String price;
-	private String description;
-	private String category;
-	private Integer subscriptionTypeId;
-	private Long userId;
+	private List<String> identifiers;
+	private String productType;
+	private String startDate;
+	private String subscriptionType;
+	private List<Description> descriptions;
+	private List<ClientResponse> subProducts;
 
-	public ClientResponse() {
-		super();
+	public String getId() {
+		return id;
 	}
 
-	public ClientResponse(Long productId, String productName, String price, String description, String category,
-			Integer subscriptionTypeId, Long userId) {
-		super();
-		this.productId = productId;
-		this.productName = productName;
-		this.price = price;
-		this.description = description;
-		this.category = category;
-		this.subscriptionTypeId = subscriptionTypeId;
-		this.userId = userId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public Long getProductId() {
-		return productId;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setProductId(Long productId) {
-		this.productId = productId;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getProductName() {
@@ -42,44 +38,72 @@ public class ClientResponse {
 		this.productName = productName;
 	}
 
-	public String getPrice() {
-		return price;
+	public List<String> getIdentifiers() {
+		return identifiers;
 	}
 
-	public void setPrice(String price) {
-		this.price = price;
+	public void setIdentifiers(List<String> identifiers) {
+		this.identifiers = identifiers;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getProductType() {
+		return productType;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setProductType(String productType) {
+		this.productType = productType;
 	}
 
-	public String getCategory() {
-		return category;
+	public String getStartDate() {
+		return startDate;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
 	}
 
-	public Integer getSubscriptionTypeId() {
-		return subscriptionTypeId;
+	public String getSubscriptionType() {
+		return subscriptionType;
 	}
 
-	public void setSubscriptionTypeId(Integer subscriptionTypeId) {
-		this.subscriptionTypeId = subscriptionTypeId;
+	public void setSubscriptionType(String subscriptionType) {
+		this.subscriptionType = subscriptionType;
 	}
 
-	public Long getUserId() {
-		return userId;
+	public List<Description> getDescriptions() {
+		return descriptions;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setDescriptions(List<Description> descriptions) {
+		this.descriptions = descriptions;
+	}
+
+	public List<ClientResponse> getSubProducts() {
+		return subProducts;
+	}
+
+	public void setSubProducts(List<ClientResponse> subProducts) {
+		this.subProducts = subProducts;
+	}
+
+	@Override
+	public String toString() {
+		return "ClientResponse [id=" + id + ", status=" + status + ", productName=" + productName + ", identifiers="
+				+ identifiers + ", productType=" + productType + ", startDate=" + startDate + ", subscriptionType="
+				+ subscriptionType + ", descriptions=" + descriptions + ", subProducts=" + subProducts + "]";
+	}
+
+	public static class Description {
+		private String text;
+
+		// Getters e Setters
+		public String getText() {
+			return text;
+		}
+
+		public void setText(String text) {
+			this.text = text;
+		}
 	}
 
 }
