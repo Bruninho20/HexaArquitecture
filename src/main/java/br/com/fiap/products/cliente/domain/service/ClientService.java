@@ -14,6 +14,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaAdmin;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -74,6 +77,9 @@ public class ClientService implements ClientUseCase, ClientPort {
 
 	@Autowired
 	private ValueMapper valueMapper;
+
+	@Autowired
+	private KafkaTemplate<String, String> kafkaTemplate;
 
 	@Override
 	public ResponseEntity<Object> crateUser(RegisterUserRequest registerUserRequest) {
@@ -219,26 +225,18 @@ public class ClientService implements ClientUseCase, ClientPort {
 		userProductRepository.save(userProduct);
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		String userProductJson;
 		try {
-			userProductJson = objectMapper.writeValueAsString(userProduct);
+			String message = objectMapper.writeValueAsString(userProduct);
+			kafkaTemplate.send("pedidos", message);
 		} catch (JsonProcessingException e) {
 			logger.error("Error serializing UserProduct object", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request");
 		}
 
-		logger.info("\nAdding messages to the queue...");
-
-		String queueName = "vivofila";
-
-		QueueClient queueClient = new QueueClientBuilder().endpoint("https://vivo2024.queue.core.windows.net")
-				.queueName(queueName).credential(new DefaultAzureCredentialBuilder().build()).buildClient();
-
-		queueClient.createIfNotExists();
-		queueClient.sendMessage(userProductJson);
-
 		return ResponseEntity.status(HttpStatus.OK).body(userProduct);
 	}
+
+
 
 	@Override
 	@Cacheable(value = "users", key = "#userId")
