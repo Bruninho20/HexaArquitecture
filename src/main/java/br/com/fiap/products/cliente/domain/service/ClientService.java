@@ -3,8 +3,6 @@ package br.com.fiap.products.cliente.domain.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,24 +12,16 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.async.DeferredResult;
 
-import com.azure.identity.DefaultAzureCredentialBuilder;
-import com.azure.storage.queue.QueueClient;
-import com.azure.storage.queue.QueueClientBuilder;
-import com.azure.storage.queue.models.SendMessageResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.fiap.products.cliente.application.controller.dto.request.CreatePlanRequest;
 import br.com.fiap.products.cliente.application.controller.dto.request.RegisterUserRequest;
 import br.com.fiap.products.cliente.application.controller.dto.response.ClientResponse;
-import br.com.fiap.products.cliente.application.controller.dto.response.InternetResponse;
 import br.com.fiap.products.cliente.application.controller.dto.response.MessageResponse;
 import br.com.fiap.products.cliente.common.config.TimeStampUtils;
 import br.com.fiap.products.cliente.common.constants.LogMessage;
@@ -47,10 +37,6 @@ import br.com.fiap.products.cliente.infrastructure.repository.UserJpaRepository;
 import br.com.fiap.products.cliente.infrastructure.repository.UserProductRepository;
 import br.com.fiap.products.cliente.infrastructure.security.jwt.JwtUtils;
 import jakarta.validation.Valid;
-import com.azure.identity.*;
-import com.azure.storage.queue.*;
-import com.azure.storage.queue.models.*;
-import java.io.*;
 
 @Service
 public class ClientService implements ClientUseCase, ClientPort {

@@ -18,25 +18,42 @@ public class ValueMapper {
 	}
 
 	public ClientResponse toDto(Object[] productData) {
-		ClientResponse productResponse = new ClientResponse();
-		productResponse.setId(productData[0].toString());
-		productResponse.setStatus("active");
-		productResponse.setProductName(productData[1].toString());
-		productResponse.setIdentifiers(List.of(productData[2].toString()));
-		productResponse.setProductType(productData[3].toString());
-		productResponse.setStartDate("2022-03-14T23:00:00+01:00");
-		productResponse.setSubscriptionType("prepaid");
+	    ClientResponse productResponse = new ClientResponse();
+	    productResponse.setId(productData[0].toString());
+	    productResponse.setStatus("active");
+	    productResponse.setProductName(productData[1].toString());
+	    productResponse.setIdentifiers(List.of(productData[2].toString()));
+	    productResponse.setProductType(productData[3].toString());
+	    productResponse.setStartDate("2022-03-14T23:00:00+01:00");
+	    productResponse.setSubscriptionType("prepaid");
 
-		// Exemplo de descrição adicionada
-		ClientResponse.Description description = new ClientResponse.Description();
-		description.setText(productData[4].toString());
-		productResponse.setDescriptions(List.of(description));
+	    ClientResponse.Description description = new ClientResponse.Description();
+	    description.setText(productData[4].toString());
+	    productResponse.setDescriptions(List.of(description));
 
-		// Adicionar lógica para subProducts se necessário
-		// productResponse.setSubProducts(...);
+	    List<ClientResponse> subProducts = new ArrayList<>();
+	    
+	    ClientResponse subProduct1 = new ClientResponse();
+	    subProduct1.setId("24523asfgaswtrwetr");
+	    subProduct1.setStatus("active");
+	    subProduct1.setProductName("Vivo pós 20GB");
+	    subProduct1.setIdentifiers(List.of("+51999901001"));
+	    subProduct1.setProductType("mobile");
+	    subProduct1.setStartDate("2023-01-01T18:30:00+01:00");
 
-		return productResponse;
+	    ClientResponse.Description subProductDescription1 = new ClientResponse.Description();
+	    subProductDescription1.setText("Descrição do subproduto 1");
+	    subProduct1.setDescriptions(List.of(subProductDescription1));
+	    
+	    subProducts.add(subProduct1);
+
+
+	    productResponse.setSubProducts(subProducts);
+
+	    return productResponse;
 	}
+
+
 
 	public List<InternetResponse> mapToInternetDTOList(List<Object[]> objList) {
 		List<InternetResponse> responseList = new ArrayList<>();

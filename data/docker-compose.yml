@@ -17,6 +17,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=fiap
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
