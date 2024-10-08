@@ -31,10 +31,6 @@ public class WebSecurityConfig {
         "/api/cliente/activate/**","/actuator/**","/client/products","/api/**"
     };
 
-//    @Bean
-//    public AuthTokenFilter authenticationJwtTokenFilter() {
-//        return new AuthTokenFilter();
-//    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -44,10 +40,6 @@ public class WebSecurityConfig {
         return authProvider;
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-//        return authConfig.getAuthenticationManager();
-//    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

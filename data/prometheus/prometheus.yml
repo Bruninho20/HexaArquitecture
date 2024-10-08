@@ -6,3 +6,10 @@ scrape_configs:
       - targets: ['host.docker.internal:8080']
         labels:
           application: 'ClienteApplication'
+
+  - job_name: 'node_exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:9100']  # Porta onde o Node Exporter está exposto
+        labels:
+          job: 'node'
